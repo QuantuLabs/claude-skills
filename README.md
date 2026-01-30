@@ -19,7 +19,7 @@ cp claude-skills/skills/*.md ~/.claude/commands/
 ln -sf $(pwd)/claude-skills/skills/*.md ~/.claude/commands/
 ```
 
-Then in Claude Code, type `/codex-review`, `/gem-review`, or `/hive` to use them.
+Then in Claude Code, type `/codex-review` or `/gem-review` to use them.
 
 ## Available Skills
 
@@ -50,28 +50,6 @@ These skills enable Claude to collaborate with external AI models in a consensus
 - **Plan Review**: Review architecture docs for gaps, risks, inconsistencies
 - **Codebase Analysis**: Deep architectural review (gem-review only)
 
-### Hivemind
-
-| Command | Description | Requires |
-|---------|-------------|----------|
-| `/hive` | Multi-AI consensus orchestration | [Hivemind MCP](https://github.com/QuantuLabs/hivemind-mcp) |
-| `/hive-config` | Configure Hivemind settings | Hivemind MCP |
-
-Query multiple AI models (GPT-5.2, Gemini 3 Pro) and let Claude orchestrate consensus:
-
-```
-┌────────────────────────────────────────────────────────┐
-│  Claude = Orchestrator                                 │
-│                                                        │
-│  1. Query all models simultaneously                    │
-│  2. Analyze responses: agreements & divergences        │
-│  3. If divergences exist:                              │
-│     → Send targeted follow-up questions                │
-│     → Challenge each model on specific points          │
-│  4. Synthesize final answer + Claude's perspective     │
-└────────────────────────────────────────────────────────┘
-```
-
 ## Prerequisites
 
 ### Codex CLI (for `/codex-review`)
@@ -92,10 +70,6 @@ echo 'GEMINI_API_KEY=your-key' > ~/.gemini/.env
 
 Get your API key: https://aistudio.google.com/app/apikey
 
-### Hivemind MCP (for `/hive`)
-
-Add to your Claude Code MCP configuration. See [Hivemind MCP](https://github.com/QuantuLabs/hivemind-mcp) for setup.
-
 ## Creating Your Own Skills
 
 Skills are markdown files in `~/.claude/commands/`. Structure:
@@ -111,6 +85,10 @@ Instructions for Claude to follow when this command is invoked.
 ```
 
 See the [skills/](skills/) directory for examples.
+
+## Related Projects
+
+- [Hivemind MCP](https://github.com/QuantuLabs/hivemind-mcp) — Multi-AI consensus orchestration server
 
 ## Contributing
 
