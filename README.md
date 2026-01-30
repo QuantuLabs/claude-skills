@@ -1,6 +1,6 @@
 # Claude Skills
 
-A collection of custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — Anthropic's official AI coding assistant CLI.
+A collection of custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Quick Start
 
@@ -48,6 +48,8 @@ These skills enable Claude to collaborate with external AI models in a consensus
 
 ### Codex CLI
 
+Requires a [ChatGPT Pro/Plus subscription](https://openai.com/chatgpt/pricing/).
+
 ```bash
 npm install -g @openai/codex
 ```
@@ -56,10 +58,14 @@ npm install -g @openai/codex
 
 ```bash
 npm install -g @google/gemini-cli
+```
 
-# Configure API key
+Configure your API key:
+
+```bash
 mkdir -p ~/.gemini
-echo 'GEMINI_API_KEY=your-key' > ~/.gemini/.env
+cp config/gemini-cli/.env.example ~/.gemini/.env
+# Edit ~/.gemini/.env with your API key
 ```
 
 Get your API key: https://aistudio.google.com/app/apikey
