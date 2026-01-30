@@ -2,10 +2,6 @@
 
 A collection of custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — Anthropic's official AI coding assistant CLI.
 
-## What are Skills?
-
-Skills are markdown files that extend Claude Code with new slash commands. They provide structured instructions that Claude follows to perform specialized tasks.
-
 ## Quick Start
 
 ```bash
@@ -22,8 +18,6 @@ ln -sf $(pwd)/claude-skills/skills/*.md ~/.claude/commands/
 Then in Claude Code, type `/codex-review` or `/gem-review` to use them.
 
 ## Available Skills
-
-### Multi-AI Review
 
 | Command | Description | Requires |
 |---------|-------------|----------|
@@ -52,13 +46,13 @@ These skills enable Claude to collaborate with external AI models in a consensus
 
 ## Prerequisites
 
-### Codex CLI (for `/codex-review`)
+### Codex CLI
 
 ```bash
 npm install -g @openai/codex
 ```
 
-### Gemini CLI (for `/gem-review`)
+### Gemini CLI
 
 ```bash
 npm install -g @google/gemini-cli
@@ -70,35 +64,10 @@ echo 'GEMINI_API_KEY=your-key' > ~/.gemini/.env
 
 Get your API key: https://aistudio.google.com/app/apikey
 
-## Creating Your Own Skills
-
-Skills are markdown files in `~/.claude/commands/`. Structure:
-
-```markdown
-# /command-name - Short Description
-
-Instructions for Claude to follow when this command is invoked.
-
-## Arguments
-
-- `$ARGUMENTS` - User input passed to the command
-```
-
-See the [skills/](skills/) directory for examples.
-
 ## Related Projects
 
 - [Hivemind MCP](https://github.com/QuantuLabs/hivemind-mcp) — Multi-AI consensus orchestration server
 
-## Contributing
-
-PRs welcome! To add a new skill:
-
-1. Create `skills/your-skill.md`
-2. Follow the existing skill format
-3. Update this README
-4. Submit a PR
-
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT
