@@ -1,99 +1,126 @@
 # Claude Skills
 
-Custom skills for [Claude Code](https://claude.ai/claude-code) - Anthropic's official CLI for Claude.
+A collection of custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — Anthropic's official AI coding assistant CLI.
 
-## Installation
+## What are Skills?
 
-Copy skills to your Claude Code commands directory:
+Skills are markdown files that extend Claude Code with new slash commands. They provide structured instructions that Claude follows to perform specialized tasks.
 
-```bash
-cp skills/*.md ~/.claude/commands/
-```
-
-Or symlink for auto-updates:
+## Quick Start
 
 ```bash
-ln -sf $(pwd)/skills/*.md ~/.claude/commands/
+# Clone the repo
+git clone https://github.com/QuantuLabs/claude-skills.git
+
+# Copy skills to Claude Code
+cp claude-skills/skills/*.md ~/.claude/commands/
+
+# Or symlink for auto-updates
+ln -sf $(pwd)/claude-skills/skills/*.md ~/.claude/commands/
 ```
+
+Then in Claude Code, type `/codex-review`, `/gem-review`, or `/hive` to use them.
 
 ## Available Skills
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| [Codex Review](skills/codex-review.md) | `/codex-review` | Iterative code/plan review with OpenAI Codex CLI |
-| [Gemini Review](skills/gem-review.md) | `/gem-review` | Iterative code/plan review with Gemini CLI |
-| [Hivemind](skills/hive.md) | `/hive` | Multi-AI consensus orchestration (GPT + Gemini) |
-| [Hive Config](skills/hive-config.md) | `/hive-config` | Configure Hivemind settings |
+### Multi-AI Review
 
-## Multi-AI Review Skills
+| Command | Description | Requires |
+|---------|-------------|----------|
+| `/codex-review` | Iterative code/plan review with OpenAI Codex | [Codex CLI](https://github.com/openai/codex) |
+| `/gem-review` | Iterative code/plan review with Gemini CLI | [Gemini CLI](https://github.com/google-gemini/gemini-cli) |
 
-The review skills (`codex-review`, `gem-review`) enable Claude to collaborate with other AI models for:
+These skills enable Claude to collaborate with external AI models in a consensus loop:
 
-- **Code Review**: Analyze uncommitted changes for bugs, type issues, error handling
+```
+┌────────────────────────────────────────────────────────┐
+│  Claude + External AI = Collaborative Review           │
+│                                                        │
+│  1. Run external AI review (code or plan)              │
+│  2. Claude analyzes each finding                       │
+│  3. Valid issues → Fix immediately                     │
+│  4. False positives → Document reasoning               │
+│  5. Send analysis back for consensus                   │
+│  6. Iterate until both AIs agree (max 3 rounds)        │
+└────────────────────────────────────────────────────────┘
+```
+
+**Supported modes:**
+- **Code Review**: Analyze git uncommitted changes for bugs, type issues, error handling
 - **Plan Review**: Review architecture docs for gaps, risks, inconsistencies
-- **Consensus Loop**: Iterate until Claude and the external AI agree
+- **Codebase Analysis**: Deep architectural review (gem-review only)
+
+### Hivemind
+
+| Command | Description | Requires |
+|---------|-------------|----------|
+| `/hive` | Multi-AI consensus orchestration | [Hivemind MCP](https://github.com/QuantuLabs/hivemind-mcp) |
+| `/hive-config` | Configure Hivemind settings | Hivemind MCP |
+
+Query multiple AI models (GPT-5.2, Gemini 3 Pro) and let Claude orchestrate consensus:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Claude + External AI = Collaborative Review                │
-│                                                             │
-│  1. Detect mode (code vs plan)                              │
-│  2. Run external AI review                                  │
-│  3. Parse findings                                          │
-│  4. For each finding:                                       │
-│     → Analyze: Is it valid? False positive?                 │
-│     → If valid: Apply fix (code) or note (plan)             │
-│     → If false positive: Document reasoning                 │
-│  5. CONSENSUS STEP: Send analysis back                      │
-│  6. Repeat until BOTH agree OR max 3 rounds                 │
-│  7. Report final consensus status                           │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Hivemind Skill
-
-The `/hive` skill queries multiple AI models and orchestrates consensus:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  Claude = Orchestrator                                      │
-│                                                             │
-│  1. Gather context (if codebase question)                   │
-│  2. Call hivemind → get raw responses                       │
-│  3. Analyze: consensus? divergences?                        │
-│  4. If significant divergences:                             │
-│     → Formulate targeted questions per model                │
-│     → Call hivemind again with queries[]                    │
-│  5. Repeat until consensus OR divergences are trivial       │
-│  6. Synthesize + add Claude's perspective                   │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│  Claude = Orchestrator                                 │
+│                                                        │
+│  1. Query all models simultaneously                    │
+│  2. Analyze responses: agreements & divergences        │
+│  3. If divergences exist:                              │
+│     → Send targeted follow-up questions                │
+│     → Challenge each model on specific points          │
+│  4. Synthesize final answer + Claude's perspective     │
+└────────────────────────────────────────────────────────┘
 ```
 
 ## Prerequisites
 
-### For Codex Review
+### Codex CLI (for `/codex-review`)
 
-Install [Codex CLI](https://github.com/openai/codex):
 ```bash
 npm install -g @openai/codex
 ```
 
-### For Gemini Review
+### Gemini CLI (for `/gem-review`)
 
-Install [Gemini CLI](https://github.com/google-gemini/gemini-cli):
 ```bash
 npm install -g @google/gemini-cli
-```
 
-Configure API key:
-```bash
+# Configure API key
+mkdir -p ~/.gemini
 echo 'GEMINI_API_KEY=your-key' > ~/.gemini/.env
 ```
 
-### For Hivemind
+Get your API key: https://aistudio.google.com/app/apikey
 
-Requires the [hivemind-mcp](https://github.com/your-org/hivemind-mcp) server configured in Claude Code.
+### Hivemind MCP (for `/hive`)
+
+Add to your Claude Code MCP configuration. See [Hivemind MCP](https://github.com/QuantuLabs/hivemind-mcp) for setup.
+
+## Creating Your Own Skills
+
+Skills are markdown files in `~/.claude/commands/`. Structure:
+
+```markdown
+# /command-name - Short Description
+
+Instructions for Claude to follow when this command is invoked.
+
+## Arguments
+
+- `$ARGUMENTS` - User input passed to the command
+```
+
+See the [skills/](skills/) directory for examples.
+
+## Contributing
+
+PRs welcome! To add a new skill:
+
+1. Create `skills/your-skill.md`
+2. Follow the existing skill format
+3. Update this README
+4. Submit a PR
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE)
