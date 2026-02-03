@@ -19,8 +19,10 @@ Get API key from: https://aistudio.google.com/app/apikey
 
 **Loading the API key** (before each gemini command):
 ```bash
-source ~/.gemini/.env 2>/dev/null; source ~/.gemini/.env 2>/dev/null; gemini -m gemini-3-pro-preview -p "..."
+export GEMINI_API_KEY=$(grep -E '^GEMINI_API_KEY=' ~/.gemini/.env 2>/dev/null | cut -d'=' -f2-) 2>/dev/null && gemini -m gemini-3-pro-preview -p "..."
 ```
+
+**Note**: The `export` inline pattern ensures the key is loaded in the same shell execution. Output is suppressed to avoid displaying the key.
 
 ## Mode Detection
 
@@ -64,7 +66,7 @@ source ~/.gemini/.env 2>/dev/null; source ~/.gemini/.env 2>/dev/null; gemini -m 
 ### Step 1: Initial Gemini Review (Code)
 
 ```bash
-source ~/.gemini/.env 2>/dev/null; gemini -m gemini-3-pro-preview -p "Review the uncommitted changes in this git repo. Check for:
+export GEMINI_API_KEY=$(grep -E '^GEMINI_API_KEY=' ~/.gemini/.env 2>/dev/null | cut -d'=' -f2-) 2>/dev/null && gemini -m gemini-3-pro-preview -p "Review the uncommitted changes in this git repo. Check for:
 - Type mismatches (nullable used as non-nullable)
 - Missing null checks
 - BigInt precision issues
@@ -101,7 +103,7 @@ For each finding:
 First, read the plan file(s) specified in $ARGUMENTS, then:
 
 ```bash
-source ~/.gemini/.env 2>/dev/null; gemini -m gemini-3-pro-preview -p "Review this architecture/plan document for:
+export GEMINI_API_KEY=$(grep -E '^GEMINI_API_KEY=' ~/.gemini/.env 2>/dev/null | cut -d'=' -f2-) 2>/dev/null && gemini -m gemini-3-pro-preview -p "Review this architecture/plan document for:
 
 ## Technical Gaps
 - Missing error handling strategies
@@ -167,7 +169,7 @@ Group findings into:
 ### Step 1: Initial Gemini Review (Codebase)
 
 ```bash
-source ~/.gemini/.env 2>/dev/null; gemini -m gemini-3-pro-preview -p "Perform a comprehensive architectural review of this codebase. Analyze:
+export GEMINI_API_KEY=$(grep -E '^GEMINI_API_KEY=' ~/.gemini/.env 2>/dev/null | cut -d'=' -f2-) 2>/dev/null && gemini -m gemini-3-pro-preview -p "Perform a comprehensive architectural review of this codebase. Analyze:
 
 ## Architecture
 - Overall design patterns and structure
@@ -235,7 +237,7 @@ Group findings into:
 After analyzing ALL findings, communicate back to Gemini:
 
 ```bash
-source ~/.gemini/.env 2>/dev/null; gemini -m gemini-3-pro-preview -p "I reviewed your findings and made the following decisions:
+export GEMINI_API_KEY=$(grep -E '^GEMINI_API_KEY=' ~/.gemini/.env 2>/dev/null | cut -d'=' -f2-) 2>/dev/null && gemini -m gemini-3-pro-preview -p "I reviewed your findings and made the following decisions:
 
 ## [Fixes Applied / Plan Updates Recommended]
 [List each with location and what was changed/recommended]
